@@ -1,0 +1,5 @@
+Singleton(UserRowCount)
+UserRowCount userRowCount= new UserRowCount();
+
+
+Global Initializer for table roles and userrowcount;
