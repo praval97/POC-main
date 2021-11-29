@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import { useSelector } from "react-redux";
 import { isEmpty, isEmail } from "validator";
 import store from "../../state/store/store";
+import "./CreateUserStyles.css";
 
 export default function CreateUser(props) {
   const [firstName, setFirstName] = useState("");
@@ -136,8 +137,7 @@ export default function CreateUser(props) {
             method: "POST",
             headers: {
               Accept: "application/json",
-              Authorization:
-                "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuYW5kaHUzMjQ1Iiwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJpc3MiOiJBVVRIX1NFUlZJQ0UiLCJleHAiOjE2MzcwNzM4MjksImlhdCI6MTYzNzA3MjAyOX0.XJlnF-FvYb8K6L8CZO71eInl9DjxQFW0jpy-fQ4AnZc",
+              Authorization: `Bearer ${access_token}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify(credentials),
@@ -145,13 +145,10 @@ export default function CreateUser(props) {
         );
 
         const result = await data.json();
-        console.log("Success:", result);
-        if (
-          data.status === 200 &&
-          result.hasOwnProperty("access_token") &&
-          result.hasOwnProperty("refresh_token")
-        ) {
-          props.history.push({ pathname: "/" });
+        // console.log("Success:", result);
+        if (data.status === 201) {
+          // props.history.push({ pathname: "/" });
+          console.log("Success:", result);
         } else if (data.status === 302) {
           if (result.errorMessage === "username already exist") {
             handleInputError("userName", "Username already taken");
@@ -169,12 +166,13 @@ export default function CreateUser(props) {
   };
 
   return (
-    <div>
-      <div>
+    <div className="register-container">
+      <div className="register-f-container">
         <form>
           <p>Register</p>
-          <div>
+          <div className="register-form-container">
             <input
+              className="register-input-field"
               type="text"
               name="FirstName"
               value={firstName}
@@ -190,6 +188,7 @@ export default function CreateUser(props) {
                 ""
               ))}
             <input
+              className="register-input-field"
               type="text"
               name="LastName"
               value={lastName}
@@ -203,6 +202,7 @@ export default function CreateUser(props) {
                 ""
               ))}
             <input
+              className="register-input-field"
               type="email"
               name="EmailId"
               value={emailId}
@@ -216,6 +216,7 @@ export default function CreateUser(props) {
                 ""
               ))}
             <input
+              className="register-input-field"
               type="text"
               name="City"
               value={city}
@@ -223,6 +224,7 @@ export default function CreateUser(props) {
               onChange={(e) => setCity(e.target.value)}
             ></input>
             <input
+              className="register-input-field"
               type="text"
               name="State"
               value={state}
@@ -230,6 +232,7 @@ export default function CreateUser(props) {
               onChange={(e) => setState(e.target.value)}
             ></input>
             <input
+              className="register-input-field"
               type="text"
               name="country"
               value={country}
@@ -238,6 +241,7 @@ export default function CreateUser(props) {
             ></input>
             <br></br>
             <input
+              className="register-input-field"
               type="text"
               name="UserName"
               value={userName}
@@ -251,6 +255,7 @@ export default function CreateUser(props) {
                 ""
               ))}
             <input
+              className="register-input-field"
               type="password"
               name="Password"
               value={password}
@@ -263,7 +268,9 @@ export default function CreateUser(props) {
               ) : (
                 ""
               ))}
+            <br></br>
             <input
+              className="register-input-field"
               type="checkbox"
               name="ROLE_ADMIN"
               id="admin"
@@ -272,6 +279,7 @@ export default function CreateUser(props) {
             ></input>
             Admin
             <input
+              className="register-input-field"
               type="checkbox"
               name="ROLE_USER"
               id="user"
@@ -285,7 +293,13 @@ export default function CreateUser(props) {
               ) : (
                 ""
               ))}
-            <input type="submit" value="submit" onClick={handleSubmit}></input>
+            <br></br>
+            <input
+              type="submit"
+              value="submit"
+              onClick={handleSubmit}
+              className="register-input-field"
+            ></input>
           </div>
         </form>
       </div>

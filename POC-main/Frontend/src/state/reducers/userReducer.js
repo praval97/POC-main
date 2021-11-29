@@ -1,8 +1,10 @@
-import { IS_LOGGEDOUT, UPDATE_AUTH } from "../actions/types";
+import { IS_LOGGEDOUT, UPDATE_AUTH, UPDATE_USERINFO } from "../actions/types";
 
 const INITIAL_STATE = {
   isAuth: false,
   isLoggedOut: false,
+  userName: "",
+  roles: [],
 };
 export default function userReducer(state = INITIAL_STATE, action) {
   console.log("from userReducer", state);
@@ -17,6 +19,13 @@ export default function userReducer(state = INITIAL_STATE, action) {
     return {
       ...state,
       isLoggedOut: action.payload,
+    };
+  }
+  if (action.type === UPDATE_USERINFO) {
+    return {
+      ...state,
+      userName: action.payload.userName,
+      roles: action.payload.roles,
     };
   }
   return state;

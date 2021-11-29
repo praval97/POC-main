@@ -1,10 +1,16 @@
 import axios from "axios";
-import { updateToken } from "../../state/actions/tokenAction";
-import { updateIsLoggedOut } from "../../state/actions/userAction";
-import store from "../../state/store/store";
+import { decode } from "jsonwebtoken";
+import { updateToken } from "../state/actions/tokenAction";
+import {
+  updateAuth,
+  updateIsLoggedOut,
+  updateUserInfo,
+} from "../state/actions/userAction";
+import store from "../state/store/store";
 
 export const fetchToken = async () => {
   const token = localStorage.getItem("token");
+  console.log("token", token);
   let response;
   try {
     response = await axios.get(
@@ -17,13 +23,21 @@ export const fetchToken = async () => {
     );
     if (response.data.errorCode === "UNAUTHORIZED") {
       localStorage.clear();
+      console.log("from token.js");
       store.dispatch(updateIsLoggedOut(true));
       return response.data.errorCode;
     }
     store.dispatch(updateToken(response.data.access_token));
+    let { sub: userName, roles } = decode(response.data.access_token);
+    store.dispatch(updateUserInfo({ userName, roles }));
     localStorage.setItem("token", response.data.refresh_token);
   } catch (error) {
-    console.log(error);
+    if (error.response.data.errorCode === "INTERNAL_SERVER_ERROR") {
+      store.dispatch(updateAuth(false));
+      //store.dispatch(updateIsLoggedOut(true));
+
+      console.log(error);
+    }
   }
   // axios
   //   .get("http://localhost:9001/api/v1/auth/token/refresh_token", {

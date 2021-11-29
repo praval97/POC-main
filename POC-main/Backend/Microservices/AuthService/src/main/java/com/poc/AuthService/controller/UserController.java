@@ -104,10 +104,12 @@ public class UserController {
 		return ResponseEntity.ok().body(new ErrorDetails(new Date(),"Please Login first",HttpStatus.UNAUTHORIZED));
 	}
 	
-	@DeleteMapping("/logout")
+	@PostMapping("/logout") 
 	public ResponseEntity<?> userLogOut(@RequestBody UserlogOut userlogOut){
+		System.out.println("logging out" +userlogOut.getUserName());
 		if(userSessionRepo.delete(userlogOut.getUserName()))
 		{
+			System.out.println("logging out");
 			return ResponseEntity.ok().body(JsonResponse.successMessage("User Logged out Successfully"));
 		}
 		return ResponseEntity.ok().body(new ErrorDetails(new Date(),"Something went wrong",HttpStatus.INTERNAL_SERVER_ERROR));

@@ -8,7 +8,15 @@ function PrivateRoute({ isAuth, component: Component, ...restProps }) {
       {...restProps}
       render={(props) => {
         console.log(props);
-        return isAuth ? <Component {...props} /> : <Redirect to="/login" />;
+        return isAuth ? (
+          restProps.role !== undefined ? (
+            restProps.role(Component, props)
+          ) : (
+            <Component {...props} />
+          )
+        ) : (
+          <Redirect to="/login" />
+        );
       }}
     />
   );

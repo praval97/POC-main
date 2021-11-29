@@ -2,9 +2,11 @@ import { React, useState, useEffect } from "react";
 import "./LoginStyles.css";
 import { FaTimes, FaEyeSlash, FaEye } from "react-icons/fa";
 import loginBg from "../../assets/images/login_bg.jpg";
-import refreshToken from "../../utils/token/token";
+import refreshToken from "../../api/token";
 import store from "../../state/store/store";
-import { updateAuth } from "../../state/actions/userAction";
+import { updateAuth, updateUserInfo } from "../../state/actions/userAction";
+import { decode } from "jsonwebtoken";
+import { updateToken } from "../../state/actions/tokenAction";
 
 export default function Login(props) {
   const [userName, setUserName] = useState("");
@@ -68,7 +70,10 @@ export default function Login(props) {
           result.hasOwnProperty("refresh_token")
         ) {
           localStorage.setItem("token", result.refresh_token);
+          let { sub: userName, roles } = decode(result.access_token);
+          store.dispatch(updateToken(result.access_token));
           store.dispatch(updateAuth(true));
+          store.dispatch(updateUserInfo({ userName, roles }));
           refreshToken();
           props.history.push({ pathname: "/" });
         } else if (

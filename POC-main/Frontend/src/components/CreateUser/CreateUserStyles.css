@@ -1,0 +1,25 @@
+/* .register-container {
+  height: 350px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.register-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  height: auto;
+  width: auto;
+}
+.register-f-container {
+  height: 350px;
+  width: 100px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.register-input-field {
+  padding: 5px;
+  margin: 5px;
+}  */
