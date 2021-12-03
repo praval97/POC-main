@@ -68,7 +68,7 @@ public class UserController {
 		//Get Authorization header
 		String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 		
-		
+		System.out.println("Incoming request call");
 		Map<String, String> res= new HashMap<>();
 		
 		// check refresh token present in the incoming request

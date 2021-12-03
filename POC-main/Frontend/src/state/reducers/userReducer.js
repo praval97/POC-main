@@ -7,8 +7,8 @@ const INITIAL_STATE = {
   roles: [],
 };
 export default function userReducer(state = INITIAL_STATE, action) {
-  console.log("from userReducer", state);
-  console.log("from userReducer", action);
+  // console.log("from userReducer", state);
+  // console.log("from userReducer", action);
   if (action.type === UPDATE_AUTH) {
     return {
       ...state,

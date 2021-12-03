@@ -18,6 +18,7 @@ public class JWTUtility  {
 	private  static String SECRET_KEY = "SecretPOCkey";
 	private  static Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY.getBytes());
 	private  static int ACCESS_TOKEN_EXP_TIME = 24*60*60*1000;
+	private  static int REFRESH_TOKEN_EXP_TIME = 5*60*1000;
 	private  static String ISSUER = "AUTH_SERVICE";
 	
 	
@@ -27,7 +28,7 @@ public class JWTUtility  {
 		return JWT.create()
 				.withSubject(userName)
 				.withIssuedAt(new Date(System.currentTimeMillis()))
-				.withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXP_TIME))
+				.withExpiresAt(new Date(System.currentTimeMillis()+ ACCESS_TOKEN_EXP_TIME))
 				.withIssuer(ISSUER)
 				.withClaim("roles", roles)
 				.sign(algorithm);
@@ -36,11 +37,11 @@ public class JWTUtility  {
 	public  static String createRefreshToken (String userName) {
 		return JWT.create()
 				.withSubject(userName)
-				.withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXP_TIME))
+				.withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXP_TIME))
 				.withIssuer(ISSUER)
 				.sign(algorithm);
 	}
-	
+
 	
 	public  static DecodedJWT verifyToken(String token) {
 		JWTVerifier verifier = JWT.require(algorithm).build();

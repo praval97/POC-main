@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useHistory } from "react-router";
-import { updateAuth } from "../state/actions/userAction";
+import { updateAuth, updateIsLoggedOut } from "../state/actions/userAction";
 import store from "../state/store/store";
 
 const logout = async () => {
@@ -20,7 +20,8 @@ const logout = async () => {
     );
     // setTimeout(() => {
     localStorage.clear();
-    window.location.href = "/login";
+    store.dispatch(updateIsLoggedOut(true));
+    //window.location.href = "/login";
 
     // }, 5000);
     // console.log(response);

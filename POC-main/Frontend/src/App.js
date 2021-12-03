@@ -1,7 +1,7 @@
 import { Switch, Route, Redirect } from "react-router-dom";
 import { Home, Login, Navbar, PrivateRoute, CreateUser } from "./components";
 import { useEffect, useState } from "react";
-import refreshToken, { fetchToken } from "./api/token";
+import refreshToken, { fetchToken, timer_ID } from "./api/token";
 import { useSelector } from "react-redux";
 import { updateAuth } from "./state/actions/userAction";
 import store from "./state/store/store";
@@ -10,6 +10,7 @@ import { ADMIN } from "./service/Authorization/roles";
 
 function App() {
   const { isAuth, isLoggedOut } = useSelector((state) => state.user);
+
   useEffect(() => {
     (async () => {
       const getToken = localStorage.getItem("token");
@@ -21,7 +22,20 @@ function App() {
           console.log("response", response);
           if (response !== "UNAUTHORIZED") {
             store.dispatch(updateAuth(true));
+
             refreshToken();
+
+            window.addEventListener("visibilitychange", () => {
+              if (document.hidden) {
+                clearInterval(timer_ID);
+                console.log("Tab is inactive");
+              } else {
+                console.log("Tab is active");
+                console.log("timer_ID", timer_ID);
+
+                refreshToken();
+              }
+            });
           }
           console.log("app file");
           console.log("response", response);
@@ -29,6 +43,10 @@ function App() {
       }
     })();
   }, []);
+  if (isLoggedOut) {
+    window.location.href = "/login";
+    return null;
+  }
   if (!isAuth && localStorage.getItem("token") && !isLoggedOut) {
     console.log("Loading Component");
     return <div>Loading...</div>;

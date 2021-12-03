@@ -8,6 +8,8 @@ import {
 } from "../state/actions/userAction";
 import store from "../state/store/store";
 
+const REDUCE_TIME = 30;
+let timer_ID;
 export const fetchToken = async () => {
   const token = localStorage.getItem("token");
   console.log("token", token);
@@ -55,10 +57,28 @@ export const fetchToken = async () => {
   //   });
   return response;
 };
-const refreshToken = () => {
-  setInterval(() => {
-    fetchToken();
-    console.log("From setTimeout");
-  }, 20000);
+
+const calculateRemainingTime = () => {
+  let access_token = store.getState().token.access_token;
+  let { exp } = decode(access_token);
+  let remainingTime = exp - Math.round(new Date().getTime() / 1000);
+  return (remainingTime - REDUCE_TIME) * 1000;
+};
+
+const refreshToken = async () => {
+  // timer_ID = setInterval(() => {
+  //   console.log(rem_seconds);
+  //   fetchToken();
+  //   console.log("From senpm install --save redux-state-synctTimeout");
+  // }, rem_seconds * 1000);
+  let timeInMS = calculateRemainingTime();
+  console.log(timeInMS);
+  if (timeInMS <= 0) {
+    await fetchToken();
+    timeInMS = calculateRemainingTime();
+  }
+  console.log(timeInMS);
+  timer_ID = setTimeout(refreshToken, timeInMS);
 };
 export default refreshToken;
+export { timer_ID };

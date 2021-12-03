@@ -2,7 +2,7 @@ import { React, useState, useEffect } from "react";
 import "./LoginStyles.css";
 import { FaTimes, FaEyeSlash, FaEye } from "react-icons/fa";
 import loginBg from "../../assets/images/login_bg.jpg";
-import refreshToken from "../../api/token";
+import refreshToken, { timer_ID } from "../../api/token";
 import store from "../../state/store/store";
 import { updateAuth, updateUserInfo } from "../../state/actions/userAction";
 import { decode } from "jsonwebtoken";
@@ -74,7 +74,21 @@ export default function Login(props) {
           store.dispatch(updateToken(result.access_token));
           store.dispatch(updateAuth(true));
           store.dispatch(updateUserInfo({ userName, roles }));
+
           refreshToken();
+
+          window.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+              clearInterval(timer_ID);
+              console.log("timer_ID", timer_ID);
+              console.log("Tab is inactive");
+            } else {
+              console.log("Tab is active");
+              console.log("timer_ID", timer_ID);
+
+              refreshToken();
+            }
+          });
           props.history.push({ pathname: "/" });
         } else if (
           data.status === 400 &&
